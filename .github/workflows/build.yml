@@ -17,7 +17,6 @@ jobs:
         
     - name: Build Module
       run: |
-        rm -rf build
         mkdir -p build
         cd build
         cmake -DCMAKE_TOOLCHAIN_FILE=$ANDROID_NDK_HOME/build/cmake/android.toolchain.cmake \
@@ -30,7 +29,8 @@ jobs:
       run: |
         mkdir -p zip_out/zygisk
         cp module.prop zip_out/
-        cp build/libarm64-v8a.so zip_out/zygisk/
+        # A MÁGICA ESTÁ AQUI: renomeando para arm64-v8a.so exatamente como o Zygisk exige
+        cp build/libarm64-v8a.so zip_out/zygisk/arm64-v8a.so
         cd zip_out && zip -r ../ff_mod_menu.zip *
         
     - name: Upload ZIP
