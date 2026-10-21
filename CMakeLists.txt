@@ -2,18 +2,18 @@ cmake_minimum_required(VERSION 3.22.1)
 project(ff_cheat)
 
 set(CMAKE_CXX_STANDARD 17)
+# Força o compilador a colocar a biblioteca padrao C++ dentro do .so (evita erro de load)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -static-libstdc++ -static-libgcc")
 
-# Puxa os arquivos do ImGui
 file(GLOB IMGUI_SOURCES
-    ${CMAKE_SOURCE_DIR}/imgui/*.cpp
+    ${CMAKE_SOURCE_DIR}/imgui/imgui.cpp
+    ${CMAKE_SOURCE_DIR}/imgui/imgui_draw.cpp
+    ${CMAKE_SOURCE_DIR}/imgui/imgui_tables.cpp
+    ${CMAKE_SOURCE_DIR}/imgui/imgui_widgets.cpp
     ${CMAKE_SOURCE_DIR}/imgui/backends/imgui_impl_opengl3.cpp
-    ${CMAKE_SOURCE_DIR}/imgui/backends/imgui_impl_android.cpp
 )
 
-add_library(arm64-v8a SHARED
-    jni.cpp
-    ${IMGUI_SOURCES}
-)
+add_library(arm64-v8a SHARED jni.cpp ${IMGUI_SOURCES})
 
 target_include_directories(arm64-v8a PRIVATE
     ${CMAKE_SOURCE_DIR}/imgui
