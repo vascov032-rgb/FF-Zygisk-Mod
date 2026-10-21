@@ -59,20 +59,21 @@ void InlineHook(void* target, void* replace, void** backup) {
 class FfMenu : public zygisk::ModuleBase {
 public:
     void onLoad(zygisk::Api *api, JNIEnv *env) override {
-        this->env = env; // CORRIGIDO: Salvando o env aqui
+        this->env = env;
     }
     
     void preAppSpecialize(zygisk::AppSpecializeArgs *args) override {
         const char *process = env->GetStringUTFChars(args->nice_name, nullptr);
         
-        std::ofstream log("/sdcard/zygisk_debug.txt", std::ios::app);
+        // MUDANÇA: Salvando em /data/local/tmp/ em vez de /sdcard/
+        std::ofstream log("/data/local/tmp/zygisk_debug.txt", std::ios::app);
         if (log.is_open()) {
-            log << "Zygisk viu o processo: " << (process ? process : "null") << "\n";
+            log << "Zygisk viu: " << (process ? process : "null") << "\n";
             log.close();
         }
 
         if (process && strstr(process, "com.dts.freefireth") != NULL) {
-            std::ofstream ff_log("/sdcard/zygisk_debug.txt", std::ios::app);
+            std::ofstream ff_log("/data/local/tmp/zygisk_debug.txt", std::ios::app);
             ff_log << "!!! FREE FIRE DETECTADO, INJETANDO PAINEL !!!\n";
             ff_log.close();
             
@@ -87,7 +88,7 @@ public:
     }
 
 private:
-    JNIEnv *env; // CORRIGIDO: Declarando a variável na classe
+    JNIEnv *env;
 };
 
 REGISTER_ZYGISK_MODULE(FfMenu)
