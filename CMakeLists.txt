@@ -23,13 +23,13 @@ target_include_directories(arm64-v8a PRIVATE
 
 find_library(log-lib log)
 find_library(android-lib android)
-find_library(gles-lib GLESv2)
 find_library(egl-lib EGL)
+find_library(glesv3-lib GLESv3)
 
 target_link_libraries(arm64-v8a
     ${log-lib}
     ${android-lib}
-    ${gles-lib}
     ${egl-lib}
-    -llog -landroid -lEGL -lGLESv2
+    ${glesv3-lib}
+    -llog -landroid -lEGL -lGLESv3
 )
