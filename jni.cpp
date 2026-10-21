@@ -58,12 +58,13 @@ void InlineHook(void* target, void* replace, void** backup) {
 
 class FfMenu : public zygisk::ModuleBase {
 public:
-    void onLoad(zygisk::Api *api, JNIEnv *env) override {}
+    void onLoad(zygisk::Api *api, JNIEnv *env) override {
+        this->env = env; // CORRIGIDO: Salvando o env aqui
+    }
     
     void preAppSpecialize(zygisk::AppSpecializeArgs *args) override {
         const char *process = env->GetStringUTFChars(args->nice_name, nullptr);
         
-        // SALVA O NOME DE TODO PROCESSO NO SDCARD PRA DEBUG
         std::ofstream log("/sdcard/zygisk_debug.txt", std::ios::app);
         if (log.is_open()) {
             log << "Zygisk viu o processo: " << (process ? process : "null") << "\n";
@@ -84,5 +85,9 @@ public:
             }
         }
     }
+
+private:
+    JNIEnv *env; // CORRIGIDO: Declarando a variável na classe
 };
+
 REGISTER_ZYGISK_MODULE(FfMenu)
